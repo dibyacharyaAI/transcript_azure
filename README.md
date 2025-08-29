@@ -127,6 +127,7 @@ Optional environment variable:
 If you set AZURE_OUTPUT_CONTAINER_SAS_URL, you can omit output_container_sas_url in the body.
 
 6) Project Structure
+```bash
 .
 ├─ app2.py                 # Streamlit UI (Azure SAS input → uploads to Azure)
 ├─ app.py                  # Flask API (returns only transcript URL)
@@ -139,9 +140,9 @@ If you set AZURE_OUTPUT_CONTAINER_SAS_URL, you can omit output_container_sas_url
 │  └─ utils.py             # YouTube helper for the UI
 ├─ requirements.txt
 └─ README.md
+```
 
-
-7) Deployment Notes
+8) Deployment Notes
 Streamlit (simple):
 Any VM/container that can run streamlit run app2.py.
 Ensure ffmpeg is installed.
@@ -160,14 +161,14 @@ POST /jobs returns a job ID
 A worker processes the job in the background
 GET /jobs/{id} returns status and result URLs
 
-8) Performance Tips
+9) Performance Tips
 Prefer smaller models (small/medium) over large for speed.
 Use greedy decoding (beam_size=1, best_of=1, condition_on_previous_text=False).
 Keep audio preprocessing single-pass to reduce I/O.
 Processing time is roughly linear in audio duration.
 On Apple Silicon, consider faster-whisper or whisper.cpp for further speed (optional).
 
-9) Troubleshooting
+10) Troubleshooting
 AuthorizationPermissionMismatch: Output Container SAS is missing required permissions. Regenerate with at least sp=cw (recommended sp=rcwl).
 FileNotFoundError: ffmpeg: Install ffmpeg on the host.
 Question generation crashes (Apple MPS/GPU): Questions are optional; keep OFF or run QG on CPU with a smaller T5 model.
