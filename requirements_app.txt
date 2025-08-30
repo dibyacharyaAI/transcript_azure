@@ -1,7 +1,6 @@
 # --- Web/API & UI ---
 Flask==3.1.1
 gunicorn==23.0.0
-streamlit==1.36.0
 
 # --- Azure Storage (uploads & blob reads) ---
 azure-storage-blob==12.20.0
