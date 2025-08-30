@@ -1,9 +1,9 @@
 cat > README.md << 'EOF'
-# Video Transcription (Azure SAS) — Streamlit UI + Flask API
+# Video Transcription (Azure SAS)  Flask API
 
 This repository provides two ways to run the same transcription pipeline:
 
-- Streamlit UI (`app2.py`): Paste an Azure Blob SAS media URL, transcribe (Hindi is normalized to romanized "Hinglish"), optionally generate a summary and questions, and upload outputs to your Azure container. The app shows the resulting URLs.
+
 - Flask API (`app.py`): `POST /process` with an input Blob SAS and an output Container SAS. The API returns only the transcript file URL (no summary URL), suitable for backend integration.
 
 The pipeline uses OpenAI Whisper and processes long audio via chunking.
@@ -56,22 +56,6 @@ Always use HTTPS.
 If you see AuthorizationPermissionMismatch, regenerate the SAS with the correct resource and permissions.
 
 
-4) Run the Streamlit UI
-```bash
-streamlit run app2.py
-```
-Using the UI:
-Media URL: paste your Blob SAS URL (or any direct HTTP/HTTPS media URL).
-Container SAS URL: paste your Container SAS (this is where outputs are uploaded).
-Azure virtual folder: e.g., transcripts/ (files will be created under transcripts/<safe_title>/...).
-Optional: Generate Questions (default OFF). If it fails due to memory limits, the pipeline still completes for transcript and summary.
-Optional: Upload original video file to your output container.
-Upon completion, the app displays copyable Azure URLs for:
-transcription.txt
-summary.txt
-questions.txt (optional)
-content_all.txt (combined)
-Local download buttons are also provided.
 
 
 5) Run the Flask API (Endpoint)
@@ -121,6 +105,13 @@ curl -X POST http://localhost:8000/process \
     "upload_original": false
   }'
 
+
+Success response:
+
+{"transcript_url":"https://stgdhamkiit.blob.core.windows.net/lms-storage/transcripts/What_20is_20Artificial_20Intelligence_3F_20_7C_20Quick_20Learner-20250830-145838/transcription.txt?sp=rcw&st=2025-08-30T07%3A52%3A14Z&se=2025-08-30T16%3A07%3A14Z&sv=2024-11-04&sr=c&sig=1WNfoFrMNu1VuTzOCft0NOJD9NNaE9FF3y7nbRDUaxU%3D"}
+
+
+
 ```
 
 Optional environment variable:
@@ -129,37 +120,20 @@ If you set AZURE_OUTPUT_CONTAINER_SAS_URL, you can omit output_container_sas_url
 6) Project Structure
 ```bash
 .
-├─ app2.py                 # Streamlit UI (Azure SAS input → uploads to Azure)
+               
 ├─ app.py                  # Flask API (returns only transcript URL)
 ├─ wsgi.py                 # Gunicorn entrypoint for the API
 ├─ modules/
 │  ├─ transcription.py     # download/convert/preprocess/chunk + Whisper transcribe
 │  ├─ hindi_support.py     # romanized Hindi cleanup
-│  ├─ summarization.py     # Streamlit summary generation
+│  ├─ summarization.py     # summary generation
 │  ├─ question_generation.py# optional QG (resilient; can be disabled)
 │  └─ utils.py             # YouTube helper for the UI
-├─ requirements.txt
+├─ requirements_app.txt
 └─ README.md
 ```
 
-8) Deployment Notes
-Streamlit (simple):
-Any VM/container that can run streamlit run app2.py.
-Ensure ffmpeg is installed.
-Provide a secure way for users to input the Container SAS (do not hardcode secrets).
-Flask API (production):
-Use gunicorn behind a reverse proxy (Nginx, Azure App Service, or Azure Container Apps).
-Increase timeouts for long videos (e.g., gunicorn -t 1200).
-Scale CPU/RAM based on expected video duration and traffic.
-Avoid logging SAS tokens or embedding them in logs.
-Azure App Service / Container Apps:
-Build and run with gunicorn wsgi:app on port 8000.
-Configure environment variables as needed.
-Be mindful of platform request timeouts for long-running requests.
-For very long videos, consider an async job pattern:
-POST /jobs returns a job ID
-A worker processes the job in the background
-GET /jobs/{id} returns status and result URLs
+
 
 9) Performance Tips
 Prefer smaller models (small/medium) over large for speed.
