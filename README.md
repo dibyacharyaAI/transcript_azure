@@ -113,8 +113,8 @@ cURL example:
 curl -X POST http://localhost:8000/process \
   -H "Content-Type: application/json" \
   -d '{
-    "media_url": "https://<acct>.blob.core.windows.net/<in-container>/<file>.mp4?sv=...&sr=b&sp=r&sig=...",
-    "output_container_sas_url": "https://<acct>.blob.core.windows.net/<out-container>?sv=...&sr=c&sp=rcwl&sig=...",
+    "media_url": "https://stgdhamkiit.blob.core.windows.net/lms-storage/transcripts/What%20is%20Artificial%20Intelligence%3F%20%7C%20Quick%20Learner.mp4?sp=r&st=2025-08-30T07:47:02Z&se=2025-08-30T16:02:02Z&sv=2024-11-04&sr=b&sig=UqnEXA99toj3Gxemxi9sXMZ%2BlNGJOH%2FDEVXOZFxocFQ%3D",
+    "output_container_sas_url": "https://stgdhamkiit.blob.core.windows.net/lms-storage?sp=rcw&st=2025-08-30T07:52:14Z&se=2025-08-30T16:07:14Z&sv=2024-11-04&sr=c&sig=1WNfoFrMNu1VuTzOCft0NOJD9NNaE9FF3y7nbRDUaxU%3D",
     "out_folder": "transcripts/",
     "generate_summary": false,
     "generate_questions": false,
