@@ -36,7 +36,7 @@ source venv/bin/activate      # macOS/Linux
 
 # 3) Install dependencies
 pip install --upgrade pip
-pip install -r requirements.txt
+pip install -r requirements_app.txt
 
 
 ```
